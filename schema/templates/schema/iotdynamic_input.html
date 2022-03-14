@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        IOT Device {{iotdevice.name}} Configuration
+    </div>
+
+    <div class="card-body">
+        <h3>Parameters</h3>
+        <div class="d-flex flex-column">
+            {% for prop, values in iotdevice.dynamic_schema.properties.items %}
+
+            <div class="form-group row mb-4">
+                <div class="col-4">
+                    <label for="form-label">Data Type</label>
+                    <select name="{{prop}}-data_type" class="form-control form-control-sm" disabled>
+                        <option value="{{values.type}}">{{values.type}}</option>
+                    </select>
+                </div>
+
+                <div class="col-4">
+                    <label for="form-label">Parameter name</label>
+                    <input class="form-control form-control-sm" value="{{prop}}" disabled>
+                </div>
+            </div>
+                
+            {% endfor %}
+
+
+        </div>
+      <a href="{% url 'schema:preview_schema' iotdevice.id %}" class="btn btn-outline-primary">Preview JSON Schema</a>
+    </div>
+  </div>
+{% endblock %}

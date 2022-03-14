@@ -1,0 +1,99 @@
+{% extends 'base.html'%} {% block content %}
+
+<h1>Dynamic Parameter JSON Schema Creator</h1>
+<form method="post">
+  {% csrf_token %}
+
+  <div class="card">
+    <h5 class="card-header">IOT - Dynamic Parameters</h5>
+    <div class="card-body">
+      <div class="d-flex flex-col">
+        <div id="prop" class="form-group prop">
+          <a href="#" class="btn btn-secondary" type="button" id="propAddBtn"
+            >Add parameter
+          </a>
+          <div class="form-group">
+            <label for="{{form.name.id}}">{{form.name.label}}</label>
+            {{form.name}}
+          </div>
+          <div id="fieldContainer"></div>
+        </div>
+      </div>
+
+      <div class="marginsubmitbtn" style="margin-top: 150px;">
+          <input class="btn btn-primary mt-4" type="submit" value="Submit" />
+
+      </div>
+
+      <!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a> -->
+    </div>
+  </div>
+</form>
+
+{% endblock %} {% block javascripts %}
+<script>
+  function fieldCounter() {
+    this.counter = 1;
+    this.generateFieldForm = () => {
+      const templateString = template(this.counter++);
+
+      const container = document.querySelector("#fieldContainer");
+      const div = document.createElement("div");
+      div.id = "#addoneField" + this.counter;
+      div.innerHTML = templateString;
+      container.parentElement.appendChild(div);
+    };
+  }
+
+  const template = (counter) => `
+            
+            <div class="row align-items-center">
+                <div class="col-4">
+                    <label for="" class="form-label"> Data Type</label>
+                    <select name="data_type" class="form-control form-control-sm" id="data_type${counter}" >
+                    <option value="string">String</option>
+
+                    <option value="number">Number</option>
+
+                    <option value="object">Dict</option>
+
+                    <option value="array">Array</option>
+
+                    <option value="boolean">Boolean</option>
+
+                    <option value="null">Null</option>
+
+                    </select>
+                </div>
+                <div class="col-4">
+                    <label for="" class="form-label"> Field Name</label>
+                    <input type="text" name="name" onchange="setValueForCheckbox(event)" class="form-control form-control-sm" maxlength="255" required="" id="name${counter}" >
+                </div>
+<div class="col-2 mt-4">
+                    
+                        <input type="checkbox" name="is_required" class="form-check-input form-check-sm" style="max-width : 32px" value="0" id="id_is_required">
+                    </div>
+            
+
+                <div class="col-2 mt-4">
+                    <span class="removeField"><i class="fa fa-minus"></i></span>
+                </div>
+            </div>
+
+        </div>
+    `;
+
+  function setValueForCheckbox(event) {
+    const target = event.target;
+    const container = target.parentElement.parentElement;
+
+    const checkbox = container.querySelector("input[type='checkbox']");
+    checkbox.value = target.value;
+  }
+
+  const proaddBtn = document.getElementById("propAddBtn");
+  proaddBtn.onclick = new fieldCounter().generateFieldForm;
+</script>
+
+{% endblock %}
